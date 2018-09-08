@@ -23,6 +23,7 @@ Recommended nonce length is 64-128bits and up to 256 bits.
 First one assigns a key to be used of desired length.  For this example we will use the key TESTINGKEY.  We convert those letter to numbers using the key that A = 0 and Z = 25.
 
 MESSAGE = REDDYECIPHERISFASTANDEASYTOUSE
+
 KEY = MYTESTINGKEY
 
 MYTESTINGKEY = 12, 24, 19, 4, 18, 19, 8, 13, 6, 10, 4, 24
