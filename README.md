@@ -14,6 +14,8 @@ k[c] = (k[c] + k[i] + j) % 256
 
 j = (j + k[c] + c) % 256
 
+Recommended nonce length is 64-128bits and up to 256 bits.
+
 # RedDye Hand Cipher
 
 *** Coded in Python as the RedDye H4 Cipher
