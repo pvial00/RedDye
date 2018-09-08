@@ -26,7 +26,7 @@ REDDYECIPHERISFASTANDEASYTOUSE = 17, 4, 3, 3, 24, 4, 2, 8, 15, 7, 4, 17, 8, 18, 
 
 k[c] = (k[c] + k[i] + j) % 26
 j = (j + k[c] + c) % 26
-sub = (k[c] + char) % 26
+sub = (k[c] + char) % 26  # to decrypt simply substract here instead of add
 i = (i + 1) % keylength
 c = (c + 1) % 26
 
