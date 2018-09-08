@@ -7,4 +7,5 @@ Passes Dieharder entropy tests
 
 # Python class usage
 reddye = RedDye()
+
 ctxt = reddye.crypt(data, key)
