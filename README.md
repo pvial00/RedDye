@@ -36,6 +36,10 @@ or
 
 CIPHERTEXT = GPGKEKNITVDKSMCLCIPCOPWRUWJQKEZ
 
+# C crypt function usage
+
+crypt(data, key, nonce);
+
 
 # Python class usage
 reddye = RedDye()
