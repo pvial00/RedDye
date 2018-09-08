@@ -8,7 +8,7 @@ High speed stream cipher that uses a 256 bit key to achieve ultimate security at
 
 RedDye performance is around that of AES.
 
-RedDye operates under the assumption that one cannot easily revert the following formula and find k which is XOR'ed with the plaintext byte.
+RedDye operates under the assumption that one cannot easily revert the formula below and find k which is XOR'ed with the plaintext byte.
 
 k[c] = (k[c] + k[i] + j) % 256
 
