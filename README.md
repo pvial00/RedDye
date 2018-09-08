@@ -29,7 +29,7 @@ k[c] = (k[c] + k[i] + j) % 26
 
 j = (j + k[c] + c) % 26
 
-sub = (k[c] + char) % 26  # to decrypt simply substract here instead of add
+sub = (k[c] + char) % 26  # sub becomes your output character.  to decrypt simply substract here instead of add
 
 i = (i + 1) % keylength
 
