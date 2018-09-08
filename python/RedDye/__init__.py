@@ -1,6 +1,6 @@
 class RedDye:
     keylen = 32
-    def keysetup(self, key):
+    def keysetup(self, key, nonce):
         k = [0] * self.keylen
         j = 0
         for c, char in enumerate(key):
@@ -10,11 +10,18 @@ class RedDye:
         for c in range(256):
             k[c % klen] = (k[c % klen] + j) % 256
             j = (j + k[c % klen]) % 256
+        if nonce != "":
+            for c, char in enumerate(nonce):
+                k[c] = (k[c] + ord(char)) % 256
+                j = (j + k[c]) % 256
+            for c in range(256):
+                k[c % klen] = (k[c % klen] + j) % 256
+                j = (j + k[c % klen]) % 256
         return k, j
 
-    def crypt(self, chars, key):
+    def crypt(self, chars, key, nonce=""):
         ctxt = []
-        k, j = self.keysetup(key)
+        k, j = self.keysetup(key, nonce)
         klen = len(k)
         c = 0
         i = 1

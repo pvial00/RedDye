@@ -1,5 +1,7 @@
-from b3 import RedDye
+from RedDye import RedDye
 import sys, select, getpass, os, time, getopt
+
+nonce_len = 16
 
 try:
     mode = sys.argv[1]
@@ -35,10 +37,13 @@ data = infile.read()
 infile.close()
 
 if mode == "encrypt":
-    c = reddye.crypt(data, key)
-    outfile.write(c)
+    nonce = os.urandom(nonce_len)
+    c = reddye.crypt(data, key, nonce)
+    outfile.write(nonce+c)
 elif mode == "decrypt":
-    plain_text = reddye.crypt(data, key)
+    nonce = data[:nonce_len]
+    msg = data[nonce_len:]
+    plain_text = reddye.crypt(msg, key, nonce)
     outfile.write(plain_text)
 outfile.close()
 
