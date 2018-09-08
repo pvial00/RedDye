@@ -10,9 +10,9 @@ RedDye performance is around that of AES.
 
 RedDye operates under the assumption that one cannot easily revert the following formula and find k which is XOR'ed with the plaintext byte.
 
-k[c] = (k[c] + k[i] + j) % 26
+k[c] = (k[c] + k[i] + j) % 256
 
-j = (j + k[c] + c) % 26
+j = (j + k[c] + c) % 256
 
 # RedDye Hand Cipher
 
