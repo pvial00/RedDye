@@ -8,6 +8,12 @@ High speed stream cipher that uses a 256 bit key to achieve ultimate security at
 
 RedDye performance is around that of AES.
 
+RedDye operates under the assumption that one cannot easily revert the following formula and find k which is XOR'ed with the plaintext byte.
+
+k[c] = (k[c] + k[i] + j) % 26
+
+j = (j + k[c] + c) % 26
+
 # RedDye Hand Cipher
 
 *** Coded in Python as the RedDye H4 Cipher
