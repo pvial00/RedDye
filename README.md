@@ -26,9 +26,13 @@ We then convert the plaintext letters into numbers and apply the following formu
 REDDYECIPHERISFASTANDEASYTOUSE = 17, 4, 3, 3, 24, 4, 2, 8, 15, 7, 4, 17, 8, 18, 5, 0, 18, 19, 0, 13, 3, 4, 0, 18, 24, 19, 14, 20, 18, 4
 
 k[c] = (k[c] + k[i] + j) % 26
+
 j = (j + k[c] + c) % 26
+
 sub = (k[c] + char) % 26  # to decrypt simply substract here instead of add
+
 i = (i + 1) % keylength
+
 c = (c + 1) % 26
 
 CIPHERTEXT = 6, 15, 6, 10, 4, 10, 13, 8, 19, 21, 3, 10, 18, 12, 2, 11, 2, 8, 15, 2, 14, 15, 22, 17, 20, 22, 9, 16, 10, 4, 25
