@@ -1,41 +1,36 @@
 class RedDye:
-    keylen = 26
+    keylen = 32
     def keysetup(self, key):
         k = [0] * self.keylen
         j = 0
-        for c, byte in enumerate(key):
-            k[c] = (k[c] + (ord(byte) - 65)) % 26
-            j = (j + (ord(byte) - 65)) % 26
+        for c, char in enumerate(key):
+            k[c] = (k[c] + ord(char)) % 256
+            j = (j + k[c]) % 256
         klen = len(k)
         for c in range(256):
-            k[c % klen] = (k[c % klen] + j) % 26
-            j = (j + k[c % klen]) % 26
+            k[c % klen] = (k[c % klen] + j) % 256
+            j = (j + k[c % klen]) % 256
         return k, j
 
-    def encrypt(self, chars, key):
+    def crypt(self, chars, key):
         ctxt = []
+        k, j = self.keysetup(key)
+        klen = len(k)
         c = 0
         i = 1
-        k, j = self.keysetup(key)
         for char in chars:
-            k[c] = (k[c] + k[i] + j) % 26
-            j = (j + k[c] + c) % 26
-            sub = (k[c] + (ord(char) - 65)) % 26
-            ctxt.append(chr(sub + 65))
-            i = (i + 1) % 26
-            c = (c + 1) % 26
+            k[c % klen] = (k[c % klen] + k[i] + j) % 256
+            j = (j + k[c % klen] + c) % 256
+            sub = ((ord(char)) ^ k[c % klen]) % 256
+            ctxt.append(chr(sub))
+            i = (i + 1) % klen
+            c = (c + 1) % 256
         return "".join(ctxt)
     
-    def decrypt(self, chars, key):
-        ctxt = []
-        c = 0
-        i = 1
-        k, j = self.keysetup(key)
-        for char in chars:
-            k[c] = (k[c] + k[i] + j) % 26
-            j = (j + k[c] + c) % 26
-            sub = ((ord(char) - 65) - k[c]) % 26
-            ctxt.append(chr(sub + 65))
-            i = (i + 1) % 26
-            c = (c + 1) % 26
-        return "".join(ctxt)
+    def kdf(self, key, iterations=10):
+        if len(key) < self.keylen:
+            for x in range(self.keylen - len(key)):
+                key += chr(0)
+        for i in range(iterations):
+            key = self.crypt(key, key)
+        return key

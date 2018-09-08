@@ -1,4 +1,4 @@
-from b3 import RedDye
+from reddye26 import RedDye
 import sys, select, getpass, os, time, getopt
 
 try:
@@ -27,18 +27,18 @@ try:
 except IndexError as ier:
     key = getpass.getpass("Enter key: ")
 
-reddye = RedDye()
-key = reddye.kdf(key)
+machine = RedDye()
+#key = KDF().gen(key)
 
 start = time.time()
 data = infile.read()
 infile.close()
 
 if mode == "encrypt":
-    c = reddye.crypt(data, key)
+    c = machine.encrypt(data, key)
     outfile.write(c)
 elif mode == "decrypt":
-    plain_text = reddye.crypt(data, key)
+    plain_text = machine.decrypt(data, key)
     outfile.write(plain_text)
 outfile.close()
 
