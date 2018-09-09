@@ -30,6 +30,11 @@ void expandpassword(unsigned char *password, unsigned char* key) {
         key[x] = (key[x] + password[x]) % 256; }
 }
 
+void usage() {
+    printf("reddye <encrypt/decrypt> <input file> <output file> <password>\n");
+    exit(0);
+}
+
 int main(int argc, char *argv[]) {
     FILE *infile, *outfile, *randfile;
     char *in, *out, *mode;
@@ -44,6 +49,9 @@ int main(int argc, char *argv[]) {
     int nonce_length = 16;
     unsigned char nonce[nonce_length];
     unsigned char block[buflen];
+    if (argc != 5) {
+        usage();
+    }
     mode = argv[1];
     in = argv[2];
     out = argv[3];
