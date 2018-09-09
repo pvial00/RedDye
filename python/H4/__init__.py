@@ -7,7 +7,6 @@ class H4:
         for c, byte in enumerate(key):
             k[c] = (k[c] + (ord(byte) - 65)) % 26
             j = (j + (ord(byte) - 65)) % 26
-        print k, j
         return k, j
 
     def encrypt(self, chars, key):
