@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
                 i = (i + 1) % 256;
                 c = (c + 1) % 256;
             }
-            if (d == (blocks - 1)) {
+            if (d == (blocks - 1) && extra != 0) {
                 bsize = extra;
             }
             fwrite(block, 1, bsize, outfile);
@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
                 i = (i + 1) % 256;
                 c = (c + 1) % 256;
             }
-            if (d == (blocks - 1)) {
+            if ((d == (blocks - 1)) && extra != 0) {
                 bsize = extra;
             }
             fwrite(block, 1, bsize, outfile);
