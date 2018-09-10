@@ -27,10 +27,10 @@ void keysetup(unsigned char *key, unsigned char *nonce) {
 unsigned char * crypt(unsigned char *data, unsigned char *key, unsigned char *nonce, long datalen) {
    keysetup(key, nonce);
    int c = 0;
-   int i = 1;
    for (int x = 0; x < datalen; x++) {
-       k[c % keylen] = (k[c % keylen] + k[i] + j) % 256;
+       k[c % keylen] = (k[c % keylen] + k[(c + 1) % keylen] + j) % 256;
        j = (j + k[c % keylen] + c) % 256;
        data[x] = data[x] ^ k[c % keylen];
-       i = (i + 1) % 256;
-       c = (c + 1) % 256; } }
+       c = (c + 1) % 256;
+   } 
+}

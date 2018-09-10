@@ -80,10 +80,9 @@ int main(int argc, char *argv[]) {
             fread(block, buflen, 1, infile);
             bsize = sizeof(block);
             for (int b = 0; b < bsize; b++) {
-                k[c % keylen] = (k[c % keylen] + k[i] + j) % 256;
+                k[c % keylen] = (k[c % keylen] + k[(c + 1) % keylen] + j) % 256;
                 j = (j + k[c % keylen] + c) % 256;
                 block[b] = block[b] ^ k[c % keylen];
-                i = (i + 1) % 256;
                 c = (c + 1) % 256;
             }
             if (d == (blocks - 1) && extra != 0) {
@@ -107,10 +106,9 @@ int main(int argc, char *argv[]) {
             fread(block, buflen, 1, infile);
             bsize = sizeof(block);
             for (int b = 0; b < bsize; b++) {
-                k[c % keylen] = (k[c % keylen] + k[i] + j) % 256;
+                k[c % keylen] = (k[c % keylen] + k[(c + 1) % keylen] + j) % 256;
                 j = (j + k[c % keylen] + c) % 256;
                 block[b] = block[b] ^ k[c % keylen];
-                i = (i + 1) % 256;
                 c = (c + 1) % 256;
             }
             if ((d == (blocks - 1)) && extra != 0) {
