@@ -4,7 +4,7 @@
 #include "reddye_kdf.c"
 
 int keylen = 32;
-int k[32];
+int k[] = { 83, 41, 201, 107, 175, 150, 205, 119, 188, 140, 154, 210, 72, 30, 194, 189, 130, 9, 134, 201, 11, 145, 29, 179, 192, 0, 125, 209, 184, 132, 207, 219 };
 int j = 0;
 
 void keysetup(unsigned char *key, unsigned char *nonce) {
@@ -26,8 +26,8 @@ void keysetup(unsigned char *key, unsigned char *nonce) {
 
 void expandpassword(unsigned char *password, unsigned char* key) {
     for (int x = 0; x < strlen(password); x++) {
-        key[x] = 0;
-        key[x] = (key[x] + password[x]) % 256; }
+        key[x] = (key[x] + password[x]) % 256;
+    }
 }
 
 void usage() {
@@ -89,7 +89,6 @@ int main(int argc, char *argv[]) {
                 bsize = extra;
             }
             fwrite(block, 1, bsize, outfile);
-            //free(block);
         }
     }
     else if (strcmp(mode, "decrypt") == 0) {
@@ -115,7 +114,6 @@ int main(int argc, char *argv[]) {
                 bsize = extra;
             }
             fwrite(block, 1, bsize, outfile);
-            //free(block);
         }
     }
     fclose(infile);

@@ -3,8 +3,9 @@
 #include <string.h>
     
 int kdf_keylen = 32;
-int kdf_k[32];
+int kdf_k[] = { 83, 41, 201, 107, 175, 150, 205, 119, 188, 140, 154, 210, 72, 30, 194, 189, 130, 9, 134, 201, 11, 145, 29, 179, 192, 0, 125, 209, 184, 132, 207, 219 };
 int t = 0;
+int iterations = 10;
 
 void kdf_keysetup(unsigned char *key, unsigned char *nonce) {
     int c;
@@ -17,22 +18,19 @@ void kdf_keysetup(unsigned char *key, unsigned char *nonce) {
         t = (t + kdf_k[c % kdf_keylen]) % 256; }
 }
 
-unsigned char * kdf_crypt(unsigned char *f, unsigned char *key, unsigned char *nonce, long flen) {
+unsigned char * kdf_crypt(unsigned char *key, unsigned char *nonce, long flen) {
    kdf_keysetup(key, nonce);
    int c = 0;
-   int i = 1;
    for (int x = 0; x < flen; x++) {
-       kdf_k[c % kdf_keylen] = (kdf_k[c % kdf_keylen] + kdf_k[i] + t) % 256;
+       kdf_k[c % kdf_keylen] = (kdf_k[c % kdf_keylen] + kdf_k[(c + 1) % kdf_keylen] + t) % 256;
        t = (t + kdf_k[c % kdf_keylen] + c) % 256;
-       f[x] = f[x] ^ kdf_k[c % kdf_keylen];
-       i = (i + 1) % 256;
-       c = (c + 1) % 256; } }
+       key[x] = key[x] ^ kdf_k[c % kdf_keylen];
+       c = (c + 1) % 256; } return key; }
 
 unsigned char * kdf(unsigned char *key) {
     unsigned char n[16] = "01234567890ABCDEF";
-    int iterations = 10;
     for (int x = 0; x < iterations; x++) {
-        kdf_crypt(key, key, n, sizeof(key));
+        kdf_crypt(key, n, kdf_keylen);
     }
 }
 
