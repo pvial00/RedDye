@@ -10,7 +10,7 @@ RedDye performance is slightly faster than that of AES.
 
 RedDye operates under the assumption that one cannot easily revert the formula below and find k which is XOR'ed with the plaintext byte.
 
-k[c] = (k[c] + k[i] + j) % 256
+k[c] = (k[c] + k[c + 1] + j) % 256
 
 j = (j + k[c] + c) % 256
 
