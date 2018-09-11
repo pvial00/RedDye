@@ -30,7 +30,7 @@ We then convert the plaintext letters into numbers and apply the following formu
 
 REDDYECIPHERISFASTANDEASYTOUSE = 17, 4, 3, 3, 24, 4, 2, 8, 15, 7, 4, 17, 8, 18, 5, 0, 18, 19, 0, 13, 3, 4, 0, 18, 24, 19, 14, 20, 18, 4
 
-k[c] = (k[c] + k[i] + j) % 26
+k[c] = (k[c] + k[c + 1 ] + j) % 26
 
 j = (j + k[c] + c) % 26
 
