@@ -12,29 +12,25 @@ class H4:
     def encrypt(self, chars, key):
         ctxt = []
         c = 0
-        i = 1
         k, j = self.keysetup(key)
         klen = len(k)
         for char in chars:
-            k[c % klen] = (k[c % klen] + k[i] + j) % 26
+            k[c % klen] = (k[c % klen] + k[(c + 1) % klen] + j) % 26
             j = (j + k[c % klen] + c) % 26
             sub = (k[c % klen] + (ord(char) - 65)) % 26
             ctxt.append(chr(sub + 65))
-            i = (i + 1) % klen
             c = (c + 1) % 26
         return "".join(ctxt)
     
     def decrypt(self, chars, key):
         ctxt = []
         c = 0
-        i = 1
         k, j = self.keysetup(key)
         klen = len(k)
         for char in chars:
-            k[c % klen] = (k[c % klen] + k[i] + j) % 26
+            k[c % klen] = (k[c % klen] + k[(c + 1) % klen] + j) % 26
             j = (j + k[c % klen] + c) % 26
             sub = ((ord(char) - 65) - k[c % klen]) % 26
             ctxt.append(chr(sub + 65))
-            i = (i + 1) % klen
             c = (c + 1) % 26
         return "".join(ctxt)

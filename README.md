@@ -40,8 +40,6 @@ j = (j + k[c] + c) % 26
 
 sub = (k[c] + char) % 26  # sub becomes your output character.  to decrypt simply substract here instead of add
 
-i = (i + 1) % keylength
-
 c = (c + 1) % 26
 
 CIPHERTEXT = 6, 15, 6, 10, 4, 10, 13, 8, 19, 21, 3, 10, 18, 12, 2, 11, 2, 8, 15, 2, 14, 15, 22, 17, 20, 22, 9, 16, 10, 4, 25
