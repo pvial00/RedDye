@@ -24,13 +24,11 @@ class RedDye:
         k, j = self.keysetup(key, nonce)
         klen = len(k)
         c = 0
-        i = 1
         for char in chars:
-            k[c % klen] = (k[c % klen] + k[i] + j) % 256
+            k[c % klen] = (k[c % klen] + k[(c + 1) % klen] + j) % 256
             j = (j + k[c % klen] + c) % 256
             sub = ((ord(char)) ^ k[c % klen]) % 256
             ctxt.append(chr(sub))
-            i = (i + 1) % klen
             c = (c + 1) % 256
         return "".join(ctxt)
     
