@@ -27,7 +27,7 @@ class RedDye:
         for char in chars:
             k[c % klen] = (k[c % klen] + k[(c + 1) % klen] + j) % 256
             j = (j + k[c % klen] + c) % 256
-            sub = ((ord(char)) ^ k[c % klen]) % 256
+            sub = ((ord(char)) ^ k[c % klen])
             ctxt.append(chr(sub))
             c = (c + 1) % 256
         return "".join(ctxt)
