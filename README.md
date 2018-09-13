@@ -30,7 +30,7 @@ MYTESTINGKEY = 12, 24, 19, 4, 18, 19, 8, 13, 6, 10, 4, 24
 
 Then we sum all letters in the key mod 26 and designate that number as j.  In this case j = 5.
 
-We then convert the plaintext letters into numbers and apply the following formula. c is a counter that begins with the first letter in the key.  i is a counter which begins with the second letter in the key.  We always modify the letter on the left each round and add or substract that to the input letter and then increment our counters each round.
+We then convert the plaintext letters into numbers and apply the following formula. c is a counter that begins with the first letter in the key.  We always modify the letter on the left each round and add or substract that to the input letter and then increment our counters each round.
 
 REDDYECIPHERISFASTANDEASYTOUSE = 17, 4, 3, 3, 24, 4, 2, 8, 15, 7, 4, 17, 8, 18, 5, 0, 18, 19, 0, 13, 3, 4, 0, 18, 24, 19, 14, 20, 18, 4
 
