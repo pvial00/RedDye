@@ -6,7 +6,7 @@ Passes Dieharder randomness tests
 
 High speed stream cipher that uses a 256 bit key to achieve ultimate security at the highest speeds.  Originally designed to beat Solitaire as the fastest hand cipher, RedDye offers more flexibility because it can be applied to binary data as implemented here.  RedDye26 offers a reduced version operating on A-Z characters.
 
-RedDye performance is slightly faster than that of AES.
+RedDye performance is faster than that of AES but slightly slower than that of ChaCha20.
 
 RedDye operates under the assumption that one cannot easily revert the formula below and find k which is XOR'ed with the plaintext byte.
 
