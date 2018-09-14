@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "reddye_kdf.c"
 
 int keylen = 32;
 int k[32];
