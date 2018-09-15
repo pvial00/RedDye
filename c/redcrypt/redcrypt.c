@@ -51,6 +51,7 @@ int main(int argc, char *argv[]) {
     }
     mode = argv[1];
     in = argv[2];
+    out = argv[3];
     password = argv[4];
     infile = fopen(in, "rb");
     fseek(infile, 0, SEEK_END);

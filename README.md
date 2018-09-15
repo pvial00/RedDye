@@ -50,7 +50,7 @@ CIPHERTEXT = GPGKEKNITVDKSMCLCIPCOPWRUWJQKEZ
 
 # C crypt function usage
 
-crypt(data, key, nonce);
+crypt(data, key, nonce, datalen);
 
 
 # Python class usage
