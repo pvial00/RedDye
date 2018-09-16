@@ -1,9 +1,11 @@
 # Requires libreddye.so to be built and available
+# and requires the python RedDye module
 # xknetcat.py allows encrypted data transfer between systems using the RedDye cipher
 
 import socket
 import sys, getopt, os
 import select, signal
+from reddye import RedDye
 from ctypes import *
 cdll.LoadLibrary("libreddye.so")
 libreddye = CDLL("libreddye.so")
@@ -13,6 +15,7 @@ port = 6969
 host = "0.0.0.0"
 recv_size = 65536
 noncelen = 16
+kdf_iters = 10
 #stoprequest = threading.Event()
 rt = ""
 
@@ -108,8 +111,10 @@ def clientrun(host, port, key):
                     buf.append(data)
                 data = decrypt("".join(buf), key)
                 sys.stdout.write(data)
+                break
             buf = sys.stdin.readline()
             if buf != "":
+                buf = encrypt(buf, key)
                 s.send(buf)
         s.close()
 
@@ -119,11 +124,13 @@ if len(argv) == 4:
     host = sys.argv[2]
     port = int(sys.argv[3])
     key = sys.argv[4]
+    key = RedDye().kdf(key, kdf_iters)
     serverrun(host, port, key)
 elif len(argv) == 3:
     host = sys.argv[1]
     port = int(sys.argv[2])
     key = sys.argv[3]
+    key = RedDye().kdf(key, kdf_iters)
     clientrun(host, port, key)
 else:
     usage()
