@@ -1,5 +1,7 @@
 # RedDye Stream Cipher
 
+*** Warning this cipher has not undergone heavy cryptanalysis and should not be used in production systems
+
 Authored by Karl Zander
 
 Passes Dieharder randomness tests
