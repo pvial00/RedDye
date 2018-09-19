@@ -36,6 +36,7 @@ int main(int argc, char *argv[]) {
     unsigned char *data = NULL;
     unsigned char *buf = NULL;
     int x = 0;
+    int i = 0;
     int ch;
     int buflen = 131072;
     int bsize;
@@ -75,10 +76,11 @@ int main(int argc, char *argv[]) {
             fread(block, buflen, 1, infile);
             bsize = sizeof(block);
             for (int b = 0; b < bsize; b++) {
-                k[c % keylen] = (k[c % keylen] + k[(c + 1) % keylen] + j) & 0xff;
-                j = (j + k[c % keylen] + c) & 0xff;
-                block[b] = block[b] ^ k[c % keylen];
+                k[i] = (k[i] + k[(i + 1) % keylen] + j) & 0xff;
+                j = (j + k[i] + c) & 0xff;
+                block[b] = block[b] ^ k[i];
                 c = (c + 1) & 0xff;
+                i = (i + 1) % keylen;
             }
             if (d == (blocks - 1) && extra != 0) {
                 bsize = extra;
@@ -99,10 +101,11 @@ int main(int argc, char *argv[]) {
             fread(block, buflen, 1, infile);
             bsize = sizeof(block);
             for (int b = 0; b < bsize; b++) {
-                k[c % keylen] = (k[c % keylen] + k[(c + 1) % keylen] + j) & 0xff;
-                j = (j + k[c % keylen] + c) & 0xff;
-                block[b] = block[b] ^ k[c % keylen];
+                k[i] = (k[i] + k[(i + 1) % keylen] + j) & 0xff;
+                j = (j + k[i] + c) & 0xff;
+                block[b] = block[b] ^ k[i];
                 c = (c + 1) & 0xff;
+		i = (i + 1) % keylen;
             }
             if ((d == (blocks - 1)) && extra != 0) {
                 bsize = extra;
