@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
             for (int b = 0; b < bsize; b++) {
                 k[i] = (k[i] + k[(i + 1) % keylen] + j) & 0xff;
                 j = (j + k[i] + c) & 0xff;
-                block[b] = block[b] ^ k[c % keylen];
+                block[b] = block[b] ^ k[i];
                 c = (c + 1) & 0xff;
 		i = (i + 1) % keylen;
             }
