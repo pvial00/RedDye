@@ -2,7 +2,7 @@ from reddye import RedDye
 import sys, select, getpass, os, time, getopt
 
 nonce_len = 16
-buf_len = 65536
+buf_len = 131072
 
 try:
     mode = sys.argv[1]
@@ -49,21 +49,22 @@ def keysetup(key, nonce):
 def encrypt(in_file, out_file, fsize, key):
     infile = open(in_file, "r")
     outfile = open(out_file, "w")
-    nonce = os.urandom(nonce_len)
+    nonce = RedDye().random(nonce_len)
     outfile.write(nonce)
     start = time.time()
     k, j = keysetup(key, nonce)
     klen = len(k)
-    c = 0
+    c = i = 0
     for x in range(blocks):
         ctxt = []
         block = infile.read(buf_len)
         for b in block:
-            k[c % klen] = (k[c % klen] + k[(c + 1) % klen] + j) & 0xff
-            j = (j + k[c % klen] + c) & 0xff
-            sub = ((ord(b)) ^ k[c % klen])
+            k[i] = (k[i] + k[(i + 1) % klen] + j) & 0xff
+            j = (j + k[i] + c) & 0xff
+            sub = ((ord(b)) ^ k[i])
             ctxt.append(chr(sub))
             c = (c + 1) & 0xff
+            i = (i + 1) % klen 
         outfile.write("".join(ctxt))
     infile.close()
     outfile.close()
@@ -79,16 +80,17 @@ def decrypt(in_file, out_file, fsize, key):
     start = time.time()
     k, j = keysetup(key, nonce)
     klen = len(k)
-    c = 0
+    c = i = 0
     for x in range(blocks):
         ctxt = []
         block = infile.read(buf_len)
         for b in block:
-            k[c % klen] = (k[c % klen] + k[(c + 1) % klen] + j) & 0xff
-            j = (j + k[c % klen] + c) & 0xff
-            sub = ((ord(b)) ^ k[c % klen])
+            k[i] = (k[i] + k[(i + 1) % klen] + j) & 0xff
+            j = (j + k[i] + c) & 0xff
+            sub = ((ord(b)) ^ k[i])
             ctxt.append(chr(sub))
             c = (c + 1) & 0xff
+            i = (i + 1) % klen
         outfile.write("".join(ctxt))
     infile.close()
     outfile.close()
