@@ -2,8 +2,6 @@
 
 *** Warning this cipher has not undergone heavy cryptanalysis and should not be used in production systems
 
-Recommended file encryption program is redcrypt_pbkdf2
-
 Authored by Karl Zander
 
 Passes Dieharder randomness tests
