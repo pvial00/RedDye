@@ -1,1 +1,1 @@
-gcc redcrypt.c -o reddye
+gcc redcrypt.c -o reddye -O3
