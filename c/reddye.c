@@ -31,18 +31,6 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
    } 
 }
 
-unsigned char * kdf (unsigned char *password, unsigned char *key, unsigned char *salt, int iterations, int keylen) {
-    for (int x = 0; x < keylen; x++) {
-        key[x] = 0;
-    }
-    for (int x = 0; x < strlen(password); x++) {
-        key[x] = (key[x] + password[x]) % 256;
-    }
-    for (int x = 0; x < iterations; x++) {
-        crypt(key, key, salt, keylen);
-    }
-}
-
 unsigned char * reddye_random (unsigned char *buf, int num_bytes) {
     int keylen = 32;
     int noncelen = 16;
