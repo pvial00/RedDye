@@ -15,13 +15,13 @@ void keysetup(unsigned char *key, unsigned char *nonce) {
         j = (j + k[c]) & 0xff; }
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
-        j = (j + k[c % keylen]) & 0xff; }
+        j = (j + k[c % keylen] + c) & 0xff; }
     for (c = 0; c < sizeof(nonce); c++) {
         k[c] = (k[c] + nonce[c]) & 0xff;
         j = (j + k[c]) & 0xff; }
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
-        j = (j + k[c % keylen]) & 0xff; }
+        j = (j + k[c % keylen] + c) & 0xff; }
 }
 
 void usage() {

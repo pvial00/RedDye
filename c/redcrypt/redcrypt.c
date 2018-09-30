@@ -15,13 +15,13 @@ void keysetup(unsigned char *key, unsigned char *nonce) {
         j = (j + k[c]) & 0xff; }
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
-        j = (j + k[c % keylen]) & 0xff; }
+        j = (j + k[c % keylen] + c) & 0xff; }
     for (c = 0; c < sizeof(nonce); c++) {
         k[c] = (k[c] + nonce[c]) & 0xff;
         j = (j + k[c]) & 0xff; }
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
-        j = (j + k[c % keylen]) & 0xff; }
+        j = (j + k[c % keylen] + c) & 0xff; }
 }
 
 void usage() {
@@ -42,9 +42,9 @@ int main(int argc, char *argv[]) {
     unsigned char *key[keylen];
     unsigned char *password;
     int nonce_length = 16;
-    int iterations = 10;
+    int iterations = 10000;
     unsigned char *salt = "RedDyeCipher";
-    unsigned char nonce[nonce_length];
+    unsigned char *nonce[nonce_length];
     unsigned char block[buflen];
     if (argc != 5) {
         usage();

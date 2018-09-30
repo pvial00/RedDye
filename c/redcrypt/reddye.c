@@ -13,13 +13,13 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
         j = (j + k[c % keylen]) & 0xff; }
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
-        j = (j + k[c % keylen]) & 0xff; }
+        j = (j + k[c % keylen] + c) & 0xff; }
     for (c = 0; c < sizeof(nonce); c++) {
         k[c % keylen] = (k[c % keylen] + nonce[c]) & 0xff;
         j = (j + k[c % keylen]) & 0xff; }
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
-        j = (j + k[c % keylen]) & 0xff; }
+        j = (j + k[c % keylen] + c) & 0xff; }
 
    c = 0;
    for (int x = 0; x < datalen; x++) {
@@ -35,11 +35,11 @@ unsigned char * reddye_random (unsigned char *buf, int num_bytes) {
     int keylen = 32;
     int noncelen = 16;
     unsigned char *key[keylen];
-    unsigned char nonce[noncelen];
+    unsigned char *nonce[noncelen];
     FILE *randfile;
     randfile = fopen("/dev/urandom", "rb");
-    fread(&nonce, noncelen, 1, randfile);
+    fread(nonce, noncelen, 1, randfile);
     fread(key, keylen, 1, randfile);
     fclose(randfile);
-    crypt(buf, key, nonce, sizeof(buf));
+    crypt(buf, key, nonce, num_bytes);
 }
