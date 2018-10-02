@@ -23,6 +23,8 @@ Recommended nonce length is 64-128bits.
 # Cryptanalysis
 Under a known plaintext attack knowing the first 32 bytes of the plaintext or plaintext equal to the length of the key.  k[] can be recalculated and the message decrypted.
 
+There is no known bias in a ciphertext only attack and the output isn't distinguishable from a random output.
+
 # RedDye Hand Cipher
 
 *** Coded in Python as the RedDye H4 Cipher
