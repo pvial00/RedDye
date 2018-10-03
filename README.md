@@ -1,6 +1,6 @@
 # RedDye Stream Cipher
 
-*** Warning this cipher has not undergone heavy cryptanalysis and should not be used in production systems
+*** Warning this cipher is intended to be used as a hand cipher and for educational purposes only
 
 Authored by Karl Zander
 
