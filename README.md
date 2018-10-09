@@ -1,6 +1,8 @@
 # RedDye Stream Cipher
 
-*** Warning this cipher is intended to be used as a hand cipher and for educational purposes only
+*** Warning this cipher has not undergone heavy cryptanalysis and should be used in production systems
+
+*** RedDye has been undergone a slight refit to deal with known plaintext attack situations
 
 Authored by Karl Zander
 
@@ -18,18 +20,18 @@ k[i] = (k[i] + k[i + 1] + j) % 256
 
 j = (j + k[i] + c) % 256
 
+output = j ^ k[i]
+
 Recommended nonce length is 64-128bits.
 
 # Cryptanalysis
-Under a known plaintext attack knowing the first 32 bytes of the plaintext or plaintext equal to the length of the key.  k[] can be recalculated and the message decrypted.
-
 There is no known bias in a ciphertext only attack and the output isn't distinguishable from a random output.
 
 # RedDye Hand Cipher
 
 *** Coded in Python as the RedDye H4 Cipher
 
-First one assigns a key to be used of desired length.  For this example we will use the key TESTINGKEY.  We convert those letter to numbers using the key that A = 0 and Z = 25.
+First one assigns a key to be used of desired length.  For this example we will use the key MYTESTINGKEY.  We convert those letter to numbers using the key that A = 0 and Z = 25.
 
 MESSAGE = REDDYECIPHERISFASTANDEASYTOUSE
 
@@ -47,15 +49,17 @@ k[c] = (k[c] + k[c + 1 ] + j) % 26
 
 j = (j + k[c] + c) % 26
 
-sub = (k[c] + char) % 26  # sub becomes your output character.  to decrypt simply substract here instead of add
+output = (j + k[c]) % 26
+
+sub = (output + char) % 26  # sub becomes your output character.  to decrypt simply substract here instead of add
 
 c = (c + 1) % 26
 
-CIPHERTEXT = 6, 15, 6, 10, 4, 10, 13, 8, 19, 21, 3, 10, 18, 12, 2, 11, 2, 8, 15, 2, 14, 15, 22, 17, 20, 22, 9, 16, 10, 4, 25
+CIPHERTEXT = 22, 10, 18, 3, 20, 22, 10, 23, 24, 20, 9, 3, 18, 11, 1, 22, 25, 0, 4, 9, 12, 19, 3, 2, 8, 0, 5, 6, 21, 6, 8
 
 or
 
-CIPHERTEXT = GPGKEKNITVDKSMCLCIPCOPWRUWJQKEZ
+CIPHERTEXT = WKSDUWKXYUJDSLBWZAEJMTDCIAFGVGI
 
 # C crypt function usage
 

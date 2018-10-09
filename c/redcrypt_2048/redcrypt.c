@@ -39,6 +39,7 @@ int main(int argc, char *argv[]) {
     int ch;
     int buflen = 131072;
     int bsize;
+    int output;
     unsigned char *key[keylen];
     unsigned char *password;
     int nonce_length = 16;
@@ -75,7 +76,8 @@ int main(int argc, char *argv[]) {
             for (int b = 0; b < bsize; b++) {
                 k[c] = (k[c] + k[(c + 1) & 0xff] + j) & 0xff;
                 j = (j + k[c] + c) & 0xff;
-                block[b] = block[b] ^ k[c];
+		output = j ^ k[c];
+                block[b] = block[b] ^ output;
                 c = (c + 1) & 0xff;
             }
             if (d == (blocks - 1) && extra != 0) {
@@ -99,7 +101,8 @@ int main(int argc, char *argv[]) {
             for (int b = 0; b < bsize; b++) {
                 k[c] = (k[c] + k[(c + 1) % keylen] + j) & 0xff;
                 j = (j + k[c] + c) & 0xff;
-                block[b] = block[b] ^ k[c];
+		output = j ^ k[c];
+                block[b] = block[b] ^ output;
                 c = (c + 1) & 0xff;
             }
             if ((d == (blocks - 1)) && extra != 0) {

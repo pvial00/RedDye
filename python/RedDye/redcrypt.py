@@ -36,14 +36,14 @@ def keysetup(key, nonce):
     klen = len(k)
     for c in range(256):
         k[c % klen] = (k[c % klen] + j) & 0xff
-        j = (j + k[c % klen]) & 0xff
+        j = (j + k[c % klen] + c) & 0xff
     if nonce != "":
         for c, char in enumerate(nonce):
             k[c] = (k[c] + ord(char)) & 0xff
             j = (j + k[c]) & 0xff
         for c in range(256):
             k[c % klen] = (k[c % klen] + j) & 0xff
-            j = (j + k[c % klen]) & 0xff
+            j = (j + k[c % klen] + c) & 0xff
     return k, j
 
 def encrypt(in_file, out_file, fsize, key):
@@ -61,7 +61,8 @@ def encrypt(in_file, out_file, fsize, key):
         for b in block:
             k[i] = (k[i] + k[(i + 1) % klen] + j) & 0xff
             j = (j + k[i] + c) & 0xff
-            sub = ((ord(b)) ^ k[i])
+            output = j ^ k[i]
+            sub = ((ord(b)) ^ output)
             ctxt.append(chr(sub))
             c = (c + 1) & 0xff
             i = (i + 1) % klen 
@@ -87,7 +88,8 @@ def decrypt(in_file, out_file, fsize, key):
         for b in block:
             k[i] = (k[i] + k[(i + 1) % klen] + j) & 0xff
             j = (j + k[i] + c) & 0xff
-            sub = ((ord(b)) ^ k[i])
+            output = j ^ k[i]
+            sub = ((ord(b)) ^ output)
             ctxt.append(chr(sub))
             c = (c + 1) & 0xff
             i = (i + 1) % klen

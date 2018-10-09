@@ -25,7 +25,8 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
    for (int x = 0; x < datalen; x++) {
        k[i] = (k[i] + k[(i + 1) % keylen] + j) & 0xff;
        j = (j + k[i] + c) & 0xff;
-       data[x] = data[x] ^ k[i];
+       output = j ^ k[i];
+       data[x] = data[x] ^ output;
        c = (c + 1) & 0xff;
        i = (i + 1) % keylen;
    } 

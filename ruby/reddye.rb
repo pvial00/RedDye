@@ -9,7 +9,7 @@ class RedDye
 	end
 	for c in 0..255
 	    k[c % keylen] = (k[c % keylen] + j) % 256
-	    j = (j + k[c % keylen]) % 256
+	    j = (j + k[c % keylen] + c) % 256
 	end
 	if nonce.length >= 8
 	    for c in 0..(nonce.length - 1)
@@ -18,7 +18,7 @@ class RedDye
 	    end
 	    for c in 0..255
 	        k[c % keylen] = (k[c % keylen] + j) % 256
-	        j = (j + k[c % keylen]) % 256
+	        j = (j + k[c % keylen] + c) % 256
 	    end
 	end
 	return k, j
@@ -32,7 +32,8 @@ class RedDye
 	for i in 0..(data.length - 1)
 	    k[c % keylen] = (k[c % keylen] + k[(c + 1) % keylen] + j) % 256
 	    j = (j + k[c % keylen] + c) % 256
-	    sub = data[i].ord ^ k[c % keylen]
+	    output = j ^ k[c % keylen]
+	    sub = data[i].ord ^ output
 	    ctxt += sub.chr
 	    c = (c + 1) % 256
 	end

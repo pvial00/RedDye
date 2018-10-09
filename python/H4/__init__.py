@@ -17,7 +17,8 @@ class H4:
         for char in chars:
             k[c % klen] = (k[c % klen] + k[(c + 1) % klen] + j) % 26
             j = (j + k[c % klen] + c) % 26
-            sub = (k[c % klen] + (ord(char) - 65)) % 26
+            output = (j + k[c % klen]) % 26
+            sub = (output + (ord(char) - 65)) % 26
             ctxt.append(chr(sub + 65))
             c = (c + 1) % 26
         return "".join(ctxt)
@@ -30,7 +31,8 @@ class H4:
         for char in chars:
             k[c % klen] = (k[c % klen] + k[(c + 1) % klen] + j) % 26
             j = (j + k[c % klen] + c) % 26
-            sub = ((ord(char) - 65) - k[c % klen]) % 26
+            output = (j + k[c % klen]) % 26
+            sub = ((ord(char) - 65) - output) % 26
             ctxt.append(chr(sub + 65))
             c = (c + 1) % 26
         return "".join(ctxt)
