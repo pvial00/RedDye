@@ -10,14 +10,14 @@ class RedDye:
         klen = len(k)
         for c in range(256):
             k[c % klen] = (k[c % klen] + j) & 0xff
-            j = (j + k[c % klen]) & 0xff
+            j = (j + k[c % klen] + c) & 0xff
         if nonce != "":
             for c, char in enumerate(nonce):
                 k[c] = (k[c] + ord(char)) & 0xff
                 j = (j + k[c]) & 0xff
             for c in range(256):
                 k[c % klen] = (k[c % klen] + j) & 0xff
-                j = (j + k[c % klen]) & 0xff
+                j = (j + k[c % klen] + c) & 0xff
         return k, j
 
     def crypt(self, data, key, nonce="", test=1):
@@ -28,9 +28,11 @@ class RedDye:
         for byte in data:
             k[i] = (k[i] + k[(i + 1) % klen] + j) & 0xff
             j = (j + k[i] + c) & 0xff
-            c = (c + 1) & 0xff
+            output = j ^ k[i]
             sub = ((ord(byte)) ^ k[i]) & 0xff
             ctxt.append(chr(sub))
+            c = (c + 1) & 0xff
+            i = (i + 1) % klen
         return "".join(ctxt)
     
     def kdf(self, key, iterations=10):
