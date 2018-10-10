@@ -20,7 +20,7 @@ k[i] = (k[i] + k[i + 1] + j) % 256
 
 j = (j + k[i] + c) % 256
 
-output = j ^ k[i]
+output = ((j + k[i]) % 256) ^ k[i]
 
 Recommended nonce length is 64-128bits.
 
@@ -49,17 +49,17 @@ k[c] = (k[c] + k[c + 1 ] + j) % 26
 
 j = (j + k[c] + c) % 26
 
-output = (j + k[c]) % 26
+output = (((j + k[c]) % 26) + k[c]) % 26
 
 sub = (output + char) % 26  # sub becomes your output character.  to decrypt simply substract here instead of add
 
 c = (c + 1) % 26
 
-CIPHERTEXT = 22, 10, 18, 3, 20, 22, 10, 23, 24, 20, 9, 3, 18, 11, 1, 22, 25, 0, 4, 9, 12, 19, 3, 2, 8, 0, 5, 6, 21, 6, 8
+CIPHERTEXT = 15, 6, 20, 12, 15, 6, 5, 22, 23, 6, 8, 13, 8, 19, 23, 20, 10, 1, 15, 10, 23, 4, 14, 8, 23, 13, 15, 25, 4, 4, 14
 
 or
 
-CIPHERTEXT = WKSDUWKXYUJDSLBWZAEJMTDCIAFGVGI
+CIPHERTEXT = PGUMPGFWXGINITXUKBPKXEOIXNPZEEO
 
 # C crypt function usage
 

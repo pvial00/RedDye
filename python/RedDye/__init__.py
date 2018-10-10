@@ -22,14 +22,14 @@ class RedDye:
 
     def crypt(self, data, key, nonce="", test=1):
         ctxt = []
-        k, j, last = self.keysetup(key, nonce)
+        k, j = self.keysetup(key, nonce)
         klen = len(k)
         c = i = 0
         for byte in data:
             k[i] = (k[i] + k[(i + 1) % klen] + j) & 0xff
             j = (j + k[i] + c) & 0xff
-            output = j ^ k[i]
-            sub = ((ord(byte)) ^ k[i]) & 0xff
+            output = k[i] ^ ((j + k[i]) & 0xff)
+            sub = ((ord(byte)) ^ output)
             ctxt.append(chr(sub))
             c = (c + 1) & 0xff
             i = (i + 1) % klen

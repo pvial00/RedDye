@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
             for (int b = 0; b < bsize; b++) {
                 k[c] = (k[c] + k[(c + 1) & 0xff] + j) & 0xff;
                 j = (j + k[c] + c) & 0xff;
-		output = j ^ k[c];
+		output = ((j + k[c]) & 0xff) ^ k[c];
                 block[b] = block[b] ^ output;
                 c = (c + 1) & 0xff;
             }
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
             for (int b = 0; b < bsize; b++) {
                 k[c] = (k[c] + k[(c + 1) % keylen] + j) & 0xff;
                 j = (j + k[c] + c) & 0xff;
-		output = j ^ k[c];
+		output = ((j + k[c]) & 0xff) ^ k[c];
                 block[b] = block[b] ^ output;
                 c = (c + 1) & 0xff;
             }

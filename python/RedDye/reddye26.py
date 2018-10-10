@@ -20,7 +20,7 @@ class RedDye:
         for char in chars:
             k[c] = (k[c] + k[i] + j) % 26
             j = (j + k[c] + c) % 26
-            output = (j + k[c]) % 26
+            output = (((j + k[c]) % 26) + k[c]) % 26
             sub = (output + (ord(char) - 65)) % 26
             ctxt.append(chr(sub + 65))
             i = (i + 1) % 26
@@ -35,7 +35,7 @@ class RedDye:
         for char in chars:
             k[c] = (k[c] + k[i] + j) % 26
             j = (j + k[c] + c) % 26
-            output = (j + k[c]) % 26
+            output = (((j + k[c]) % 26) + k[c]) % 26
             sub = ((ord(char) - 65) - output) % 26
             ctxt.append(chr(sub + 65))
             i = (i + 1) % 26
