@@ -24,6 +24,10 @@ output = ((j + k[i]) % 256) ^ k[i]
 
 Recommended nonce length is 64-128bits.
 
+# Authentication
+
+RedDye is paired with a RedDye based authenticator called H4A.  It takes the message data and a key and generates a 128 bit authentication code that can be attached to the message to ensure the message has not been tampered with.  H4A relies on the strength of the RedDye cipher.
+
 # Cryptanalysis
 There is no known bias in a ciphertext only attack and the output isn't distinguishable from a random output.
 
