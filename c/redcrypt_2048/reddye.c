@@ -15,7 +15,7 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
         j = (j + k[c % keylen] + c) & 0xff; }
-    for (c = 0; c < sizeof(nonce); c++) {
+    for (c = 0; c < strlen(nonce); c++) {
         k[c % keylen] = (k[c % keylen] + nonce[c]) & 0xff;
         j = (j + k[c % keylen]) & 0xff; }
     for (c = 0; c < 256; c++) {
