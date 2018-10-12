@@ -37,11 +37,11 @@ unsigned char * h4a_mac (unsigned char *data, unsigned char *mac, unsigned char 
     }
 
     n = 0;
-    //for (int x = 0; x < (maclen * 2); x++) {
-    //   mac_k[n] = (mac_k[n] + mac_k[(n + 1) % maclen] + t) & 0xff;
-    //   t = (t + mac_k[n % maclen]) & 0xff;
-    //   out = ((t + mac_k[n]) & 0xff) ^ mac_k[n];
-    //   mac[n] ^= out; 
-    //   n = (n + 1) % maclen;
-    //}
+    for (int x = 0; x < (maclen * 2); x++) {
+       mac_k[n] = (mac_k[n] + mac_k[(n + 1) % maclen] + t) & 0xff;
+       t = (t + mac_k[n % maclen]) & 0xff;
+       out = ((t + mac_k[n]) & 0xff) ^ mac_k[n];
+       mac[n] ^= out; 
+       n = (n + 1) % maclen;
+    }
 }
