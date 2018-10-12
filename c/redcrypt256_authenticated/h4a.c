@@ -8,8 +8,10 @@ unsigned char * h4a_mac (unsigned char *data, unsigned char *mac, unsigned char 
         mac[x] = 0;
     }
     int mac_k[maclen];
+    int reg[maclen];
     for (int x = 0; x < maclen; x++) {
         mac_k[x] = 0;
+	reg[maclen] = 0;
     }
     int t = 0;
     int r = 0;
@@ -29,16 +31,17 @@ unsigned char * h4a_mac (unsigned char *data, unsigned char *mac, unsigned char 
 	t = (t + mac_k[n % maclen]) & 0xff;
 	out = ((t + mac_k[n]) & 0xff) ^ mac_k[n];
 	in = out ^ data[x];
-        mac[n] = (mac[n] + in) & 0xff;
+	reg[n] = (reg[n] + data[x]) & 0xff;
+        mac[n] = ((mac[n] + in) & 0xff) ^ reg[n];
         n = (n + 1) % maclen;
     }
 
     n = 0;
-    for (int x = 0; x < (maclen * 2); x++) {
-       mac_k[n] = (mac_k[n] + mac_k[(n + 1) % maclen] + t) & 0xff;
-       t = (t + mac_k[n % maclen]) & 0xff;
-       out = ((t + mac_k[n]) & 0xff) ^ mac_k[n];
-       mac[n] ^= out; 
-       n = (n + 1) % maclen;
-    }
+    //for (int x = 0; x < (maclen * 2); x++) {
+    //   mac_k[n] = (mac_k[n] + mac_k[(n + 1) % maclen] + t) & 0xff;
+    //   t = (t + mac_k[n % maclen]) & 0xff;
+    //   out = ((t + mac_k[n]) & 0xff) ^ mac_k[n];
+    //   mac[n] ^= out; 
+    //   n = (n + 1) % maclen;
+    //}
 }
