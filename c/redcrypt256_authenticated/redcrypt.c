@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
 	ctxt = malloc(fsize);
 	fread(ctxt, 1, fsize, outfile);
 	fclose(outfile);
-	h4a_mac(ctxt, mac, key);
+	h4a_mac(ctxt, fsize, mac, key);
         outfile = fopen(out, "wb");
 	fwrite(mac, 1, mac_length, outfile);
 	fwrite(ctxt, 1, fsize, outfile);
@@ -118,7 +118,7 @@ int main(int argc, char *argv[]) {
         fseek(infile, 0, SEEK_SET);
 	unsigned char * verification_mac[mac_length];
 	kdf(password, key, salt, iterations, keylen);
-	h4a_mac(ctxt, verification_mac, key);
+	h4a_mac(ctxt, (fsize - mac_length), verification_mac, key);
 	free(ctxt);
 	if (memcmp(mac, verification_mac, mac_length) == 0) {
             fread(mac, 1, mac_length, infile);
