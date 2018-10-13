@@ -34,7 +34,7 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
 }
 
 unsigned char * reddye_random (unsigned char *buf, int num_bytes) {
-    int keylen = 32;
+    int keylen = 128;
     int noncelen = 16;
     unsigned char *key[keylen];
     unsigned char nonce[noncelen];

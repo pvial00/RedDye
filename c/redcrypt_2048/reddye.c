@@ -3,8 +3,8 @@
 #include <string.h>
 
 unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *nonce, long datalen) {
-    int keylen = 32;
-    int k[32] = {0};
+    int keylen = 256;
+    int k[256] = {0};
     int j = 0;
     int i = 0;
     int c;
@@ -24,17 +24,16 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
 
    c = 0;
    for (int x = 0; x < datalen; x++) {
-       k[i] = (k[i] + k[(i + 1) % keylen] + j) & 0xff;
-       j = (j + k[i] + c) & 0xff;
-       output = ((j + k[i]) & 0xff) ^ k[i];
+       k[c] = (k[c] + k[(c + 1) & 0xff] + j) & 0xff;
+       j = (j + k[c] + c) & 0xff;
+       output = ((j + k[c]) & 0xff) ^ k[c];
        data[x] = data[x] ^ output;
        c = (c + 1) & 0xff;
-       i = (i + 1) % keylen;
    } 
 }
 
 unsigned char * reddye_random (unsigned char *buf, int num_bytes) {
-    int keylen = 32;
+    int keylen = 256;
     int noncelen = 16;
     unsigned char *key[keylen];
     unsigned char nonce[noncelen];
