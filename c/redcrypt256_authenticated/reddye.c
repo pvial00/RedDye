@@ -4,10 +4,12 @@
 
 unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *nonce, long datalen) {
     int keylen = 32;
-    int k[32] = {0};
+    int diff = 256 - keylen;
+    int k[256] = {0};
     int j = 0;
     int i = 0;
     int c;
+    int m = (256 / 2) - 1;
     int output;
     for (c=0; c < keylen; c++) {
         k[c % keylen] = (k[c % keylen] + key[c % keylen]) & 0xff;
@@ -15,33 +17,39 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
         j = (j + k[c % keylen] + c) & 0xff; }
-    for (c = 0; c < sizeof(nonce); c++) {
+    for (c = 0; c < strlen(nonce); c++) {
         k[c % keylen] = (k[c % keylen] + nonce[c]) & 0xff;
         j = (j + k[c % keylen]) & 0xff; }
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
         j = (j + k[c % keylen] + c) & 0xff; }
+    for (c = 0; c < diff; c++) {
+        k[c+keylen] = (k[c] + k[(c + 1) % diff] + j) & 0xff;
+	j = (j + k[c % diff] + c) & 0xff; }
+    for (c = 0; c < 256; c++) {
+        k[c] = (k[c] + k[(c + m) & 0xff] + j) & 0xff;
+        j = (j + k[c] + c) & 0xff; }
+
 
    c = 0;
    for (int x = 0; x < datalen; x++) {
-       k[i] = (k[i] + k[(i + 1) % keylen] + j) & 0xff;
-       j = (j + k[i] + c) & 0xff;
-       output = ((j + k[i]) & 0xff) ^ k[i];
+       k[c] = (k[c] + k[(c + 1) & 0xff] + j) & 0xff;
+       j = (j + k[c] + c) & 0xff;
+       output = ((j + k[c]) & 0xff) ^ k[c];
        data[x] = data[x] ^ output;
        c = (c + 1) & 0xff;
-       i = (i + 1) % keylen;
    } 
 }
 
 unsigned char * reddye_random (unsigned char *buf, int num_bytes) {
-    int keylen = 32;
+    int keylen = 256;
     int noncelen = 16;
     unsigned char *key[keylen];
-    unsigned char *nonce[noncelen];
+    unsigned char nonce[noncelen];
     FILE *randfile;
     randfile = fopen("/dev/urandom", "rb");
-    fread(nonce, noncelen, 1, randfile);
+    fread(&nonce, noncelen, 1, randfile);
     fread(key, keylen, 1, randfile);
     fclose(randfile);
-    crypt(buf, key, nonce, num_bytes);
+    crypt(buf, key, nonce, sizeof(buf));
 }

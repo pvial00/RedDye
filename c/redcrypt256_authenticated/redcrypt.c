@@ -6,11 +6,12 @@
 #include "h4a.c"
 
 int keylen = 32;
-int k[32] = {0};
+int k[256] = {0};
 int j = 0;
 
 void keysetup(unsigned char *key, unsigned char *nonce) {
     int c;
+    int m = keylen / 2;
     for (c=0; c < keylen; c++) {
         k[c] = (k[c] + key[c]) & 0xff;
         j = (j + k[c]) & 0xff; }
@@ -23,6 +24,12 @@ void keysetup(unsigned char *key, unsigned char *nonce) {
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
         j = (j + k[c % keylen] + c) & 0xff; }
+    for (c = 0; c < diff; c++) {
+        k[c+keylen] = (k[c] + k[(c + 1) % diff] + j) & 0xff;
+        j = (j + k[c % diff] + c) & 0xff; }
+    for (c = 0; c < 256; c ++) {
+        k[c] = (k[c] + k[(c + m) & 0xff] + j) & 0xff;
+        j = (j + k[c] + c) & 0xff; }
 }
 
 void usage() {
@@ -77,12 +84,11 @@ int main(int argc, char *argv[]) {
             fread(block, buflen, 1, infile);
             bsize = sizeof(block);
             for (int b = 0; b < bsize; b++) {
-                k[i] = (k[i] + k[(i + 1) % keylen] + j) & 0xff;
-                j = (j + k[i] + c) & 0xff;
-		output = ((j + k[i]) & 0xff) ^ k[i];
+                k[c] = (k[c] + k[(c + 1) % keylen] + j) & 0xff;
+                j = (j + k[c] + c) & 0xff;
+		output = ((j + k[c]) & 0xff) ^ k[c];
                 block[b] = block[b] ^ output;
                 c = (c + 1) & 0xff;
-                i = (i + 1) % keylen;
             }
             if (d == (blocks - 1) && extra != 0) {
                 bsize = extra;
@@ -128,12 +134,11 @@ int main(int argc, char *argv[]) {
                 fread(block, buflen, 1, infile);
                 bsize = sizeof(block);
                 for (int b = 0; b < bsize; b++) {
-                    k[i] = (k[i] + k[(i + 1) % keylen] + j) & 0xff;
-                    j = (j + k[i] + c) & 0xff;
-		    output = ((j + k[i]) & 0xff) ^ k[i];
+                    k[c] = (k[c] + k[(c + 1) % keylen] + j) & 0xff;
+                    j = (j + k[c] + c) & 0xff;
+		    output = ((j + k[c]) & 0xff) ^ k[c];
                     block[b] = block[b] ^ output;
                     c = (c + 1) & 0xff;
-		    i = (i + 1) % keylen;
                 }
                 if ((d == (blocks - 1)) && extra != 0) {
                     bsize = extra;
