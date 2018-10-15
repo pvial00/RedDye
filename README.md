@@ -10,7 +10,7 @@ Passes Dieharder randomness tests
 
 High speed stream cipher that uses a primarily 256 bit key (optionally 128, 512, 1024 and 2048) to achieve ultimate security at the highest speeds.  Originally designed to beat Solitaire as the fastest, most secure hand cipher, RedDye offers more flexibility because it can be applied to binary data as implemented here.  RedDye26 offers a reduced version operating on A-Z characters.
 
-RedDye performance is faster than that of ASM implementations AES and ChaCha20.
+RedDye performance is faster than that of ASM implementations AES and ChaCha20 and RC4.
 
 RedDye's construction begins with a 256-bit (32 byte) key and nonce that are combined to form the array k[].  j is a value that is a rolling sum total of all calulated k[] values mod 256.  j is passed on to the encryption function.  k[] is processed two bytes at a time through the encryption algorithm.  The encryption algorithm outputs one byte at a time.  RedDye maintains two counters, c and i.  i is used only to iterate over k[].  c is used as an 8-bit counter which is combined with j to maintain uniformity.
 
