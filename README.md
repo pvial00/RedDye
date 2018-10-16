@@ -12,15 +12,15 @@ High speed stream cipher that uses a primarily 256 bit key (optionally 128, 512,
 
 RedDye performance is faster than that of ASM implementations AES and ChaCha20 and RC4.
 
-RedDye's construction begins with a 256-bit (32 byte) key and nonce that are combined to form the array k[].  j is a value that is a rolling sum total of all calulated k[] values mod 256.  j is passed on to the encryption function.  k[] is processed two bytes at a time through the encryption algorithm.  The encryption algorithm outputs one byte at a time.  RedDye maintains two counters, c and i.  i is used only to iterate over k[].  c is used as an 8-bit counter which is combined with j to maintain uniformity.
+RedDye's construction begins with a 256-bit (32 byte) key and nonce that are combined to form the array k[].  j is a value that is a rolling sum total of all calulated k[] values mod 256.  j is passed on to the encryption function.  k[] is processed two bytes at a time through the encryption algorithm.  The encryption algorithm outputs one byte at a time.  RedDye maintains a counter, c.  It is used as an 8-bit counter which is combined with j to maintain uniformity.  It also serves to iterate over the key stream array.
 
 RedDye operates under the assumption that one cannot easily revert the encryption formula below and find k which is XOR'ed with the plaintext byte.
 
-k[i] = (k[i] + k[i + 1] + j) % 256
+k[c] = (k[c] + k[c + 1] + j) % 256
 
-j = (j + k[i] + c) % 256
+j = (j + k[c] + c) % 256
 
-output = ((j + k[i]) % 256) ^ k[i]
+output = ((j + k[c]) % 256) ^ k[c]
 
 Recommended nonce length is 64-128bits.
 
