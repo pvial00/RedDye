@@ -44,7 +44,6 @@ int main(int argc, char *argv[]) {
     unsigned char *data = NULL;
     unsigned char *buf = NULL;
     int x = 0;
-    int i = 0;
     int ch;
     int buflen = 131072;
     int bsize;
@@ -85,7 +84,7 @@ int main(int argc, char *argv[]) {
             fread(block, buflen, 1, infile);
             bsize = sizeof(block);
             for (int b = 0; b < bsize; b++) {
-                k[c] = (k[c] + k[(c + 1) % keylen] + j) & 0xff;
+                k[c] = (k[c] + k[(c + 1) & 0xff] + j) & 0xff;
                 j = (j + k[c] + c) & 0xff;
 		output = ((j + k[c]) & 0xff) ^ k[c];
                 block[b] = block[b] ^ output;
