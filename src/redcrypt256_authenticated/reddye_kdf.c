@@ -12,7 +12,7 @@ unsigned char * kdf (unsigned char *password, unsigned char *key, unsigned char 
         n = (n + 1) % keylen;
     }
     int kdf_k[256];
-    for (int x = 0; x < keylen; x++) {
+    for (int x = 0; x < 256; x++) {
         kdf_k[x] = 0;
     }
     int t = 0;
@@ -41,10 +41,10 @@ unsigned char * kdf (unsigned char *password, unsigned char *key, unsigned char 
 	t = (t + kdf_k[n] + n) & 0xff; }
 
     n = 0;
-    for (int x = 0; x < (keylen * iterations); x++) {
+    for (int x = 0; x < (256 * iterations); x++) {
        kdf_k[r] = (kdf_k[r] + kdf_k[(r + 1) % keylen] + t) & 0xff;
        t = (t + kdf_k[r] + n) & 0xff;
-       out = t ^ kdf_k[r];
+       out = ((t + kdf_k[r]) & 0xff) ^ kdf_k[r];
        key[r] = (unsigned char)key[r] ^ out;
        n = (n + 1) & 0xff;
        r = (r + 1) % keylen;

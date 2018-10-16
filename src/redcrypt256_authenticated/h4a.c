@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned char * h4a_mac (unsigned char *data, int datalen, unsigned char *mac, unsigned char *key) {
+unsigned char * h4a_mac (unsigned char *data, int datalen, unsigned char *mac, unsigned char *key, int keylen) {
     int maclen = 16;
     for (int x = 0; x < maclen; x++) {
         mac[x] = 0;
@@ -16,12 +16,21 @@ unsigned char * h4a_mac (unsigned char *data, int datalen, unsigned char *mac, u
     int n;
     int out;
     int in;
+    int d = 256 - keylen;
+    int y = (256 / 2) - 1;
+    int multiplier = 2;
     for (n=0; n < maclen; n++) {
         mac_k[n % maclen] = (mac_k[n % maclen] + key[n % maclen]) & 0xff;
         t = (t + mac_k[n % maclen]) & 0xff; }
     for (n = 0; n < 256; n++) {
         mac_k[n % maclen] = (mac_k[n % maclen] + mac_k[(n + 1) % maclen]+ t) & 0xff;
         t = (t + mac_k[n % maclen] + n) & 0xff; }
+    for (n = 0; n < d; n++) {
+        mac_k[n+keylen] = (mac_k[n] + mac_k[(n + 1) % d] + t) & 0xff;
+	t = (t + mac_k[n % d] + n) & 0xff; }
+    for (n = 0; n < 256; n++) {
+        mac_k[n] = (mac_k[n] + mac_k[(n + y) & 0xff] + t) & 0xff;
+	t = (t + mac_k[n] + n) & 0xff; }
     
     n = 0;
     for (long x = 0; x < datalen; x++) {
@@ -34,7 +43,7 @@ unsigned char * h4a_mac (unsigned char *data, int datalen, unsigned char *mac, u
     }
 
     n = 0;
-    for (int x = 0; x < (maclen * 2); x++) {
+    for (int x = 0; x < (maclen * multiplier); x++) {
        mac_k[n] = (mac_k[n] + mac_k[(n + 1) % maclen] + t) & 0xff;
        t = (t + mac_k[n % maclen]) & 0xff;
        out = ((t + mac_k[n]) & 0xff) ^ mac_k[n];
