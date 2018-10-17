@@ -9,7 +9,7 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
     int j = 0;
     int i = 0;
     int c;
-    int m = (256 / 2) - 1;
+    int m = 256 / 2;
     int output;
     for (c=0; c < keylen; c++) {
         k[c % keylen] = (k[c % keylen] + key[c % keylen]) & 0xff;

@@ -17,7 +17,7 @@ unsigned char * h4a_mac (unsigned char *data, int datalen, unsigned char *mac, u
     int out;
     int in;
     int d = 256 - keylen;
-    int y = (256 / 2) - 1;
+    int y = 256 / 2;
     int multiplier = 2;
     for (n=0; n < keylen; n++) {
         mac_k[n] = (mac_k[n] + key[n]) & 0xff;

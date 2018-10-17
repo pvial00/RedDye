@@ -18,7 +18,7 @@ unsigned char * kdf (unsigned char *password, unsigned char *key, unsigned char 
     int t = 0;
     int r = 0;
     int d = 256 - keylen;
-    int y = (256 / 2) - 1;
+    int y = 256 / 2;
     int out;
     for (n=0; n < keylen; n++) {
         kdf_k[n % keylen] = (kdf_k[n % keylen] + key[n % keylen]) & 0xff;

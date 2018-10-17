@@ -11,7 +11,7 @@ int j = 0;
 void keysetup(unsigned char *key, unsigned char *nonce) {
     int c;
     int diff = 256 - keylen;
-    int m = (256 / 2) - 1;
+    int m = 256 / 2;
     for (c=0; c < keylen; c++) {
         k[c] = (k[c] + key[c]) & 0xff;
         j = (j + k[c]) & 0xff; }
