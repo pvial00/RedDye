@@ -42,14 +42,14 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
 }
 
 unsigned char * reddye_random (unsigned char *buf, int num_bytes) {
-    int keylen = 256;
+    int keylen = 32;
     int noncelen = 16;
     unsigned char *key[keylen];
     unsigned char nonce[noncelen];
     FILE *randfile;
     randfile = fopen("/dev/urandom", "rb");
     fread(&nonce, noncelen, 1, randfile);
-    fread(key, keylen, 1, randfile);
+    fread(&key, keylen, 1, randfile);
     fclose(randfile);
-    crypt(buf, key, nonce, sizeof(buf));
+    crypt(buf, key, nonce, num_bytes);
 }
