@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *nonce, long datalen) {
-    int keylen = 32;
+unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *nonce, long datalen, int keylen, int noncelen) {
     int diff = 256 - keylen;
     int k[256] = {0};
     int j = 0;
@@ -17,7 +16,7 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
         j = (j + k[c % keylen] + c) & 0xff; }
-    for (c = 0; c < strlen(nonce); c++) {
+    for (c = 0; c < noncelen; c++) {
         k[c % keylen] = (k[c % keylen] + nonce[c]) & 0xff;
         j = (j + k[c % keylen]) & 0xff; }
     for (c = 0; c < 256; c++) {
@@ -51,5 +50,5 @@ unsigned char * reddye_random (unsigned char *buf, int num_bytes) {
     fread(&nonce, noncelen, 1, randfile);
     fread(&key, keylen, 1, randfile);
     fclose(randfile);
-    crypt(buf, key, nonce, num_bytes);
+    crypt(buf, key, nonce, num_bytes, keylen, noncelen);
 }

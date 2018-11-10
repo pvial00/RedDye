@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned char * kdf (unsigned char *password, unsigned char *key, unsigned char *salt, int iterations, int keylen) {
+unsigned char * kdf (unsigned char *password, unsigned char *key, unsigned char *salt, int iterations, int keylen, int saltlen) {
     for (int x = 0; x < keylen; x++) {
         key[x] = 0;
     }
@@ -26,8 +26,7 @@ unsigned char * kdf (unsigned char *password, unsigned char *key, unsigned char 
     for (n = 0; n < 256; n++) {
         kdf_k[n % keylen] = (kdf_k[n % keylen] + t) & 0xff;
         t = (t + kdf_k[n % keylen]) & 0xff; }
-    int saltlen = sizeof(salt);
-    for (n = 0; n < keylen; n++) {
+    for (n = 0; n < saltlen; n++) {
         kdf_k[n] = (kdf_k[n] + salt[n % saltlen]) & 0xff;
         t = (t + kdf_k[n]) & 0xff; }
     for (n = 0; n < 256; n++) {

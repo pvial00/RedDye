@@ -5,10 +5,11 @@
 #include "reddye_kdf.c"
 
 int keylen = 32;
+int noncelen = 8;
 int k[256] = {0};
 int j = 0;
 
-void keysetup(unsigned char *key, unsigned char *nonce) {
+void keysetup(unsigned char *key, unsigned char *nonce, keylen, noncelen) {
     int c;
     int diff = 256 - keylen;
     int m = 256 / 2;
@@ -18,7 +19,7 @@ void keysetup(unsigned char *key, unsigned char *nonce) {
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
         j = (j + k[c % keylen] + c) & 0xff; }
-    for (c = 0; c < strlen(nonce); c++) {
+    for (c = 0; c < noncelen; c++) {
         k[c] = (k[c] + nonce[c]) & 0xff;
         j = (j + k[c]) & 0xff; }
     for (c = 0; c < 256; c++) {
@@ -50,10 +51,11 @@ int main(int argc, char *argv[]) {
     int output;
     unsigned char *key[keylen];
     unsigned char *password;
-    int nonce_length = 16;
+    int noncelen = 8;
     int iterations = 10;
     unsigned char *salt = "RedDyeCipher";
-    unsigned char nonce[nonce_length];
+    int saltlen = 12;
+    unsigned char nonce[noncelen];
     unsigned char block[buflen];
     if (argc != 5) {
         usage();
@@ -74,10 +76,10 @@ int main(int argc, char *argv[]) {
         if (extra != 0) {
             blocks += 1;
         }
-	reddye_random(nonce, nonce_length);
-        fwrite(nonce, 1, nonce_length, outfile);
-	kdf(password, key, salt, iterations, keylen);
-        keysetup(key, nonce);
+	reddye_random(nonce, noncelen);
+        fwrite(nonce, 1, noncelen, outfile);
+	kdf(password, key, salt, iterations, keylen, saltlen);
+        keysetup(key, nonce, keylen, noncelen);
         for (int d = 0; d < blocks; d++) {
             fread(block, buflen, 1, infile);
             bsize = sizeof(block);
@@ -95,14 +97,14 @@ int main(int argc, char *argv[]) {
         }
     }
     else if (strcmp(mode, "decrypt") == 0) {
-        long blocks = (fsize - nonce_length) / buflen;
-        long extra = (fsize - nonce_length) % buflen;
+        long blocks = (fsize - noncelen) / buflen;
+        long extra = (fsize - noncelen) % buflen;
         if (extra != 0) {
             blocks += 1;
         }
-        fread(nonce, 1, nonce_length, infile);
-	kdf(password, key, salt, iterations, keylen);
-        keysetup(key, nonce);
+        fread(nonce, 1, noncelen, infile);
+	kdf(password, key, salt, iterations, keylen, saltlen);
+        keysetup(key, nonce, keylen, noncelen);
         for (int d = 0; d < blocks; d++) {
             fread(block, buflen, 1, infile);
             bsize = sizeof(block);

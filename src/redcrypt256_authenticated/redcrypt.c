@@ -6,10 +6,11 @@
 #include "h4a.c"
 
 int keylen = 32;
+int noncelen = 8;
 int k[256] = {0};
 int j = 0;
 
-void keysetup(unsigned char *key, unsigned char *nonce) {
+void keysetup(unsigned char *key, unsigned char *nonce, int keylen , int noncelen) {
     int c;
     int diff = 256 - keylen;
     int m = keylen / 2;
@@ -19,7 +20,7 @@ void keysetup(unsigned char *key, unsigned char *nonce) {
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
         j = (j + k[c % keylen] + c) & 0xff; }
-    for (c = 0; c < strlen(nonce); c++) {
+    for (c = 0; c < noncelen; c++) {
         k[c] = (k[c] + nonce[c]) & 0xff;
         j = (j + k[c]) & 0xff; }
     for (c = 0; c < 256; c++) {
@@ -50,11 +51,11 @@ int main(int argc, char *argv[]) {
     int output;
     unsigned char *key[keylen];
     unsigned char *password;
-    int nonce_length = 16;
     int mac_length = 16;
     int iterations = 10000;
     unsigned char *salt = "RedDyeCipher";
-    unsigned char *nonce[nonce_length];
+    int saltlen = 12;
+    unsigned char *nonce[noncelen];
     unsigned char *mac[mac_length];
     unsigned char block[buflen];
     if (argc != 5) {
@@ -76,10 +77,10 @@ int main(int argc, char *argv[]) {
         if (extra != 0) {
             blocks += 1;
         }
-	reddye_random(nonce, nonce_length);
-        fwrite(nonce, 1, nonce_length, outfile);
-	kdf(password, key, salt, iterations, keylen);
-        keysetup(key, nonce);
+	reddye_random(nonce, noncelen);
+        fwrite(nonce, 1, noncelen, outfile);
+	kdf(password, key, salt, iterations, keylen, saltlen);
+        keysetup(key, nonce, keylen, noncelen);
         for (int d = 0; d < blocks; d++) {
             fread(block, buflen, 1, infile);
             bsize = sizeof(block);
@@ -112,8 +113,8 @@ int main(int argc, char *argv[]) {
 	fclose(outfile);
     }
     else if (strcmp(mode, "decrypt") == 0) {
-        long blocks = (fsize - mac_length - nonce_length) / buflen;
-        long extra = (fsize - mac_length  - nonce_length) % buflen;
+        long blocks = (fsize - mac_length - noncelen) / buflen;
+        long extra = (fsize - mac_length  - noncelen) % buflen;
         if (extra != 0) {
             blocks += 1;
         }
@@ -123,13 +124,13 @@ int main(int argc, char *argv[]) {
         fread(ctxt, 1, (fsize - mac_length), infile);
         fseek(infile, 0, SEEK_SET);
 	unsigned char * verification_mac[mac_length];
-	kdf(password, key, salt, iterations, keylen);
+	kdf(password, key, salt, iterations, keylen, saltlen);
 	h4a_mac(ctxt, (fsize - mac_length), verification_mac, key, keylen);
 	free(ctxt);
 	if (memcmp(mac, verification_mac, mac_length) == 0) {
             fread(mac, 1, mac_length, infile);
-            fread(nonce, 1, nonce_length, infile);
-            keysetup(key, nonce);
+            fread(nonce, 1, noncelen, infile);
+            keysetup(key, nonce, keylen, noncelen);
             for (int d = 0; d < blocks; d++) {
                 fread(block, buflen, 1, infile);
                 bsize = sizeof(block);
