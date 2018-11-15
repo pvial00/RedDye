@@ -1,9 +1,6 @@
 # RedDye Stream Cipher
 
-*** Warning this cipher has not undergone heavy cryptanalysis and should NOT be used in production systems
-
-*** RedDye has been undergone a slight refit to deal with known plaintext attack situations
-
+*** Warning this cipher is BROKEN, DO NOT USE
 Authored by Karl Zander
 
 Passes Dieharder randomness tests
