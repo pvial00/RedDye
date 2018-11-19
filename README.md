@@ -1,5 +1,7 @@
 # RedDye Stream Cipher
 
+*** RedDye's replacement is Purple  https://github.com/pvial00/Purple
+
 *** Warning this cipher has a known KPA attack.  If one knows equal bytes to length of the initial keystream or length of the key in the case of the hand cipher, then one can decrypt the rest of the keystream.
 
 Authored by Karl Zander

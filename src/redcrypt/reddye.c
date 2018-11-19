@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *nonce, long datalen, int keylen, int noncelen) {
+unsigned char *purple_crypt(unsigned char *data, unsigned char *key, unsigned char *nonce, long datalen, int keylen, int noncelen) {
     int diff = 256 - keylen;
     int k[256] = {0};
     int j = 0;
@@ -17,8 +17,8 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
         j = (j + k[c % keylen] + c) & 0xff; }
     for (c = 0; c < noncelen; c++) {
-        k[c % keylen] = (k[c % keylen] + nonce[c]) & 0xff;
-        j = (j + k[c % keylen]) & 0xff; }
+        k[c % noncelen] = (k[c % noncelen] + nonce[c]) & 0xff;
+        j = (j + k[c % noncelen]) & 0xff; }
     for (c = 0; c < 256; c++) {
         k[c % keylen] = (k[c % keylen] + j) & 0xff;
         j = (j + k[c % keylen] + c) & 0xff; }
@@ -32,15 +32,15 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
 
    c = 0;
    for (int x = 0; x < datalen; x++) {
-       k[c] = (k[c] + k[(c + 1) & 0xff] + j) & 0xff;
-       j = (j + k[c] + c) & 0xff;
-       output = ((j + k[c]) & 0xff) ^ k[c];
+       k[j] = (k[c] + k[j] + k[k[j]]) & 0xff;
+       j = (j + k[j]) & 0xff;
+       output = k[j];
        data[x] = data[x] ^ output;
        c = (c + 1) & 0xff;
    } 
 }
 
-unsigned char * reddye_random (unsigned char *buf, int num_bytes) {
+unsigned char * purple_random (unsigned char *buf, int num_bytes) {
     int keylen = 32;
     int noncelen = 16;
     unsigned char *key[keylen];
